@@ -20,7 +20,7 @@ Options:
   -V, --version  Print version
   ```
 ---
-#### peat filter:
+### peat filter:
 
 Tool to parse SAM formatted stdout from aligners like minimap2, bowtie2, bwa, etc. and write paired reads that pass filter to <prefix>_r1.fq.gz and <prefix>_r2.fq.gz. Summary stats are written to <report>.json. This tool was originally developed to use in pipelines like host read filtering, eliminating some of the common time consuming write-sort-read-filter steps. In the example below unaligned read pairs that pass optional thresholds are witten to r1 and r2 fq.gz files.
 
@@ -58,7 +58,7 @@ Options:
 ```
 
 ---
-#### peat coverage:
+### peat coverage:
 
 Another tool to parse SAM formatted stdout from aligners like minimap2, bowtie2, bwa, etc. Use in metagenomics pipeline for target identification. Parses SAM records in stdout from aligner, calculates target coverage (per base) and stats. SAM records are passed through to stdout and can be used as input for samtools or written to file. Run and target level stats are writen to <report>.json. All paired primary and secondary alignments that score above all optional minimum thresholds (using the highpass filter) are writtten to primary and secondary coverage arrays. Mismatch counts are also stored in a mismatch array.
 
@@ -103,7 +103,7 @@ Options:
 ```
 
 ---
-#### peat bam-rep:
+### peat bam-rep:
 
 Tool to summarize alignment stats. *Input must be a **name sorted bam file** - position or unsorted bam files will not work.* Histograms are built for insert sizes and seperately for the following alignment stats for R1 and R2 reads:
 - MAPQ scores
@@ -128,7 +128,7 @@ Options:
   -h, --help                 Print help
   ```
 ---
-#### peat bin-reads:
+### peat bin-reads:
 
 This tool was developed to allow aligned reads to be binned based on a user supplied target mapping file - a two column tsv file with target id's in the first column (these are the sequence identifiers such as accession ids in the reference database) and a desired bin name in the second column. *The input bam file must be **name sorted** - position or unsorted bam files will not work.*
 
