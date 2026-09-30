@@ -1,5 +1,5 @@
-//! n2bio/peat/src/binpooler.rs
-//! 
+//! Bin-reads pooler:
+//! Struct and functions to manage read binning and multiple paired fastq writers.
 
 use std::collections::HashMap;
 use std::io;

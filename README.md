@@ -1,7 +1,7 @@
 
 <p align="center"><b><u>P</u>aired-<u>E</u>nd <u>A</u>lignment <u>T</u>ools</b></p>
 
-#### There are several subcommands for peat:
+### There are several subcommands for peat:
 
 ```
 Usage: peat <COMMAND>
@@ -18,48 +18,36 @@ Options:
   -V, --version  Print version
   ```
 ---
-#### peat filter:
+### peat filter:
+
+Tool to parse SAM formatted stdout from aligners like minimap2, bowtie2, bwa, etc. and write paired reads that pass filter to <prefix>_r1.fq.gz and <prefix>_r2.fq.gz. Summary stats are written to <report>.json. 
+
 ```
 Usage: peat filter [OPTIONS] --prefix <PREFIX> --report <REPORT> --filter_mode <FILTER_MODE>
 
 Options:
-  -t, --threads <THREADS>
-          Number of worker threads for parsing and pairing
-          
-          [default: 4]
-
-      --shards <SHARDS>
-          Number of shards for the mate pairing hash map (recommend 4-8x threads, default = 32)
-          
-          [default: 32]
-
-  -p, --prefix <PREFIX>
-          Prefix for output files (e.g. 'out' -> out.r1.fq.gz, out.r2.fq.gz)
-
-  -r, --report <REPORT>
-          Name of the run/sample for the JSON report -> creates {report}.json
-
-      --filter_mode <FILTER_MODE>
-          How abundance values should be mathematically interpreted
-
+  -t, --threads <THREADS>            Number of worker threads for parsing and pairing [default: 4]
+  -s, --shards <SHARDS>              Number of shards for the mate pairing hash map (recommend 4-8x threads) [default: 32]
+  -p, --prefix <PREFIX>              Prefix for output files (e.g. 'out' -> out.r1.fq.gz, out.r2.fq.gz)
+  -r, --report <REPORT>              Name of the run/sample for the JSON report -> creates {report}.json
+  -m, --filter_mode <FILTER_MODE>    Retain unmapped and use max thresholds (lowpass) or keep mapped and use min thresholds (highpass)
           Possible values:
           - lowpass:  Low Pass: process SAM records that are below defined thresholds
           - highpass: High Pass: process SAM records that are above defined thresholds
-
       --align_score <ALIGN_SCORE>    Optional: Alignment Score - sam.get_int_tag("AS")
       --align_length <ALIGN_LENGTH>  Optional: Alignment Lenth - sam.calculate_alignment_length()
       --base_score <BASE_SCORE>      Optional: Per base alignment score (BS = AS/AL, avg. align_score per covered base) - sam.calculate_base_score()
       --align_prop <ALIGN_PROP>      Optional: Alignment Proportion - sam.calculate_alignment_proportion()
       --align_ident <ALIGN_IDENT>    Optional: Alignment Percent Identity - sam.calculate_alignment_identity()
       --mapq <MAPQ>                  Optional: MAPQ score - sam.mapq()
-
-  -h, --help
-          Print help (see a summary with '-h')
+  -h, --help                         Print help (see a summary with '-h')
 ```
----
-#### peat coverage:
 
-- Reads SAM records from stdout
+
+---
+### peat coverage:
+
+- Reads SAM records from stdout 
 
 ```
 Usage: peat coverage [OPTIONS] --report <REPORT>
@@ -78,7 +66,7 @@ Options:
   -h, --help                         Print help
 ```
 ---
-#### peat bam-rep:
+### peat bam-rep:
 
 ```
 Usage: peat bam-rep [OPTIONS] --bam <BAM> --report <REPORT>
@@ -93,7 +81,7 @@ Options:
   -h, --help                 Print help
   ```
 ---
-#### peat bin-reads:
+### peat bin-reads:
 
 ```
 Usage: peat bin-reads [OPTIONS] --bam <BAM> --output-dir <OUTPUT_DIR> --report <REPORT>
@@ -104,20 +92,20 @@ Options:
   -o, --output-dir <OUTPUT_DIR>        Directory for output files (e.g. 'dir' -> dir/out.r1.fq.gz, dir/out.r2.fq.gz)
   -r, --report <REPORT>                Report file prefix - creates {report}.json
   -t, --threads <THREADS>              Number of worker threads for parsing and pairing [default: 4]
-      --align_score <ALIGN_SCORE>    Optional: Alignment Score - bam.get_int_tag("AS")
-      --align_length <ALIGN_LENGTH>  Optional: Alignment Lenth - bam.calculate_alignment_length()
-      --base_score <BASE_SCORE>      Optional: Per base alignment score (BS = AS/AL, avg. align_score per covered base) - bam.calculate_base_score()
-      --align_prop <ALIGN_PROP>      Optional: Alignment Proportion - bam.calculate_alignment_proportion()
-      --align_ident <ALIGN_IDENT>    Optional: Alignment Percent Identity - bam.calculate_alignment_identity()
-      --mapq <MAPQ>                  Optional: MAPQ score - bam.mapq
+      --align_score <ALIGN_SCORE>      Optional: Alignment Score - bam.get_int_tag("AS")
+      --align_length <ALIGN_LENGTH>    Optional: Alignment Lenth - bam.calculate_alignment_length()
+      --base_score <BASE_SCORE>        Optional: Per base alignment score (BS = AS/AL, avg. align_score per covered base) - bam.calculate_base_score()
+      --align_prop <ALIGN_PROP>        Optional: Alignment Proportion - bam.calculate_alignment_proportion()
+      --align_ident <ALIGN_IDENT>      Optional: Alignment Percent Identity - bam.calculate_alignment_identity()
+      --mapq <MAPQ>                    Optional: MAPQ score - bam.mapq
   -h, --help                           Print help
 ```
 ---
 ## Examples - 
 
-#### peat filter
+### peat filter
 
-Tool to parse SAM formatted stdout from aligners like minimap2, bowtie2, bwa, etc. and write paired reads that pass filter to <prefix>_r1.fq.gz and <prefix>_r2.fq.gz. Summary stats are written to <report>.json. 
+
 
 Filter mode is set using the --filter_mode <FILTER_MODE> option.
 - lowpass - all read pairs that are unmapped or pass all defined maximum threshold values are retained.

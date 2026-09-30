@@ -1,5 +1,5 @@
-//! n2bio/peat/src/cli.rs
-//! 
+//! Cli:
+//! Structs for each subcommand arguments.
 
 use clap::{ Args, Parser, Subcommand, ValueEnum };
 use std::path::PathBuf;
@@ -84,22 +84,20 @@ pub(crate) struct FilterArgs {
     #[arg(short = 't', long, default_value_t = 4)]
     pub threads: usize,
 
-    /// Number of shards for the mate pairing hash map (recommend 4-8x threads, default = 32)
-    #[arg(long, default_value_t = 32)]
+    /// Number of shards for the mate pairing hash map (recommend 4-8x threads)
+    #[arg(short = 's', long, default_value_t = 32)]
     pub shards: usize,
 
     /// Prefix for output files (e.g. 'out' -> out.r1.fq.gz, out.r2.fq.gz)
     #[arg(short = 'p', long = "prefix", required = true)]
     pub prefix: String,
-    
-    // make optional if --stdout interleaved or --interleaved (pe vs lr) options
 
     /// Name of the run/sample for the JSON report -> creates {report}.json
-    #[arg(short = 'r', long = "report", required = true)]                              // ====== Update output logic ===========
+    #[arg(short = 'r', long = "report", required = true)]
     pub report: String,
 
-   /// How abundance values should be mathematically interpreted
-    #[arg(long = "filter_mode", value_enum)]
+    /// Retain unmapped and use max thresholds (lowpass) or keep mapped and use min thresholds (highpass)
+    #[arg(short = 'm', long = "filter_mode", value_enum)]
     pub filter_mode: ThresholdMode,
 
     #[command(flatten)]

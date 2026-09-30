@@ -1,5 +1,5 @@
-//! n2bio/peat/src/coverage.rs
-//! 
+//! Coverage:
+//! Main run function called by the coverage subcommand. 
 
 use crossbeam::channel::bounded;
 use std::io::{self, BufRead};

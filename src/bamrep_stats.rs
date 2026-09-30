@@ -1,5 +1,5 @@
-//! peat/src/bamstats.rs
-//! 
+//! Bam-rep stats:
+//! Stucts and functions to accumulate distributions and calculate stats in the bam-rep subcommand.
 
 use serde::Serialize;
 use std::collections::HashMap;

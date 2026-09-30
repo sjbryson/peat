@@ -1,5 +1,5 @@
-//! peat/src/bamreport.rs
-//! 
+//! Bam-rep report:
+//! Function to generate interactive html report in the bam-rep subcommand.
 
 use std::path::PathBuf;
 

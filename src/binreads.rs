@@ -1,5 +1,5 @@
-//! n2bio/peat/src/binreads.rs
-//! 
+//! Bin-reads:
+//! Main run function called by the bin-reads subcommand. 
 
 use std::io;
 use n2bio::bam::{ BamReader, BamHeader, BamRecord, BamFlags };

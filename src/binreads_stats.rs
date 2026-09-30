@@ -1,5 +1,5 @@
-//! n2bio/peat/src/binpooler.rs
-//! 
+//! Bin-reads stats:
+//! Struct and functions to summarize read binning stats.
 
 use serde::Serialize;
 use std::collections::BTreeMap;

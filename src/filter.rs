@@ -1,5 +1,5 @@
-//! n2bio/peat/src/filter.rs
-//! 
+//! Filter:
+//! Main run function called by the filter subcommand.
 
 use crossbeam::channel::bounded;
 use std::io::{self, BufRead, Write};

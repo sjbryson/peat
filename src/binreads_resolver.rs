@@ -1,5 +1,5 @@
-//! n2bio/peat/src/binresolver.rs
-//! 
+//! Bin-reads resolver:
+//! Struct and functions to load the reference-to-bin tsv and perform lookups.
 
 use std::collections::HashMap;
 use std::fs::File;

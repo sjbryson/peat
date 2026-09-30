@@ -1,5 +1,5 @@
-//! n2bio/peat/src/bamrep.rs
-//! 
+//! Bam-rep:
+//! Main run function called by the bam-rep subcommand. 
 
 use std::io;
 use std::collections::HashMap;

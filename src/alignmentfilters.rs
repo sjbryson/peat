@@ -1,5 +1,5 @@
-//! n2bio/peat/src/pass.rs
-//! 
+//! Alignment filters:
+//! Lowpass and Highpass functions for sam and bam records.
 
 use n2bio::sam::{SamStr, SamFields, SamFlags, SamTags, AlignmentStats};
 use n2bio::bam::{ BamRecord, BamStats, BamFlags };

@@ -1,5 +1,5 @@
-//! n2bio/peat/src/main.rs
-//! 
+//! Peat:
+//! Main function matches subcommand and calls specific run function.
 
 mod cli;
 mod filter;
