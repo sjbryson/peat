@@ -1,4 +1,4 @@
-# n2bio/peat/Cargo.toml
+# peat/Cargo.toml
 
 [package]
 name = "peat"

@@ -1,7 +1,9 @@
 
 <p align="center"><b><u>P</u>aired-<u>E</u>nd <u>A</u>lignment <u>T</u>ools</b></p>
 
-### There are several subcommands for peat:
+PEAT is a suite of tools for working with paired-end alignments and is under active development. It started as independent [tools](https://github.com/sjbryson/n2bio) developed in my viral metagenomics research. I wanted to simplify alignment based human read filtering and viral detection pipelines while enabling simple switching between different alignment tools and reference sequence libraries.
+
+#### There are several subcommands for peat:
 
 ```
 Usage: peat <COMMAND>
@@ -18,9 +20,21 @@ Options:
   -V, --version  Print version
   ```
 ---
-### peat filter:
+#### peat filter:
 
-Tool to parse SAM formatted stdout from aligners like minimap2, bowtie2, bwa, etc. and write paired reads that pass filter to <prefix>_r1.fq.gz and <prefix>_r2.fq.gz. Summary stats are written to <report>.json. 
+Tool to parse SAM formatted stdout from aligners like minimap2, bowtie2, bwa, etc. and write paired reads that pass filter to <prefix>_r1.fq.gz and <prefix>_r2.fq.gz. Summary stats are written to <report>.json. This tool was originally developed to use in pipelines like host read filtering, eliminating some of the common time consuming write-sort-read-filter steps. In the example below unaligned read pairs that pass optional thresholds are witten to r1 and r2 fq.gz files.
+
+**Pipeline example:**
+
+```
+minimap2 -ax sr --eqx --secondary=no -t <threads> <input_mmi> <r1.fq.gz> <r2.fq.gz> | \
+peat filter -t <threads> --filter_mode lowpass --prefix <fq prefix> --report <json report> \
+--AS <ALIGN_SCORE> --AL <ALIGN_LENGTH> --BS <BASE_SCORE> --AP <ALIGN_PROP> --AI <ALIGN_IDENT> --MQ <MAPQ>
+```
+
+Filter mode is set using the --filter_mode <FILTER_MODE> option.
+- lowpass - all read pairs that are unmapped or pass all defined maximum threshold values are retained.
+- highpass - all read pairs that are mapped and pass all defined minimum threshold values are retained.
 
 ```
 Usage: peat filter [OPTIONS] --prefix <PREFIX> --report <REPORT> --filter_mode <FILTER_MODE>
@@ -43,11 +57,33 @@ Options:
   -h, --help                         Print help (see a summary with '-h')
 ```
 
-
 ---
-### peat coverage:
+#### peat coverage:
 
-- Reads SAM records from stdout 
+Another tool to parse SAM formatted stdout from aligners like minimap2, bowtie2, bwa, etc. Use in metagenomics pipeline for target identification. Parses SAM records in stdout from aligner, calculates target coverage (per base) and stats. SAM records are passed through to stdout and can be used as input for samtools or written to file. Run and target level stats are writen to <report>.json. All paired primary and secondary alignments that score above all optional minimum thresholds (using the highpass filter) are writtten to primary and secondary coverage arrays. Mismatch counts are also stored in a mismatch array.
+
+**Pipeline example:**
+
+```
+minimap2 -ax sr --eqx {map_threads} {input_mmi} {r1} {r2} | \
+fastcov {cov_threads} -r {sample} {min_as} | \
+samtools sort {sort_threads} - -o {sample}.sorted.bam
+```
+
+Or if you don't want to save the sam/bam file - pipe to /dev/null:
+
+```
+minimap2 -ax sr --eqx {map_threads} {input_mmi} {r1} {r2} | \
+fastcov {cov_threads} -r {sample} {min_as} > /dev/null
+```
+
+And if you want to test filtering parameters from an existing sam/bam file:
+
+```
+samtools view -h file.bam | fastcov {cov_threads} -r {sample} {min_as} > /dev/null
+```
+
+An optional metadata file (--metadata or -m) can be used to add additional information for each reference sequence in the coverage report. The --metadata_key or -k option tells fastcov which column or field in the metadata file corresponds to the reference sequence identifier - e.g. a column named "accession" could refer to the accessions in the reference database that was aligned to - these should match what you would see in a sam/bam header. All additional fields and values associated with each key will be included in the report.json file.
 
 ```
 Usage: peat coverage [OPTIONS] --report <REPORT>
@@ -65,8 +101,19 @@ Options:
       --mapq <MAPQ>                  Optional: MAPQ score - sam.mapq()
   -h, --help                         Print help
 ```
+
 ---
-### peat bam-rep:
+#### peat bam-rep:
+
+Tool to summarize alignment stats. *Input must be a **name sorted bam file** - position or unsorted bam files will not work.* Histograms are built for insert sizes and seperately for the following alignment stats for R1 and R2 reads:
+- MAPQ scores
+- Alignment Score (AS): Scoring may depend on the specific aligner used.
+- Alignment Length (AL): Calculated from the CIGAR string. Matches, mismatches, and indels are counted; clipped regions are not
+- Per Base Alignment Score (BS): The record's alignment score divided by the alignment length (AS/AL)
+- Alignment Proportion (AP): The record's alignment length divided by the read length (AL/RL).
+Alignment Identity (AI): Percentage equal to the number of matches (sam/bam tag "NM") divided by the alignment length (100 * NM/AL).
+
+A json formatted report with raw distributions is automatically created. An interactive html report is generated when using the optional "--html" argument.
 
 ```
 Usage: peat bam-rep [OPTIONS] --bam <BAM> --report <REPORT>
@@ -74,14 +121,16 @@ Usage: peat bam-rep [OPTIONS] --bam <BAM> --report <REPORT>
 Options:
   -b, --bam <BAM>            Path to an input name-sorted BAM file to evaluate
   -r, --report <REPORT>      Report file prefix - creates {report}.json and optional {report}.html
-      --html                 Generate html plots
+      --html                 Generate html report
   -q, --min-mapq <MIN_MAPQ>  Minimum MAPQ score for insert size calculation [default: 40]
   -i, --max-ins <MAX_INS>    Max insert size to use for summary stats calculation [default: 1000]
   -l, --max-len <MAX_LEN>    Max read length to use [default: 150]
   -h, --help                 Print help
   ```
 ---
-### peat bin-reads:
+#### peat bin-reads:
+
+This tool was developed to allow aligned reads to be binned based on a user supplied target mapping file - a two column tsv file with target id's in the first column (these are the sequence identifiers such as accession ids in the reference database) and a desired bin name in the second column. *The input bam file must be **name sorted** - position or unsorted bam files will not work.*
 
 ```
 Usage: peat bin-reads [OPTIONS] --bam <BAM> --output-dir <OUTPUT_DIR> --report <REPORT>
@@ -100,25 +149,4 @@ Options:
       --mapq <MAPQ>                    Optional: MAPQ score - bam.mapq
   -h, --help                           Print help
 ```
----
-## Examples - 
-
-### peat filter
-
-
-
-Filter mode is set using the --filter_mode <FILTER_MODE> option.
-- lowpass - all read pairs that are unmapped or pass all defined maximum threshold values are retained.
-- highpass - all read pairs that are mapped and pass all defined minimum threshold values are retained.
-
-This approach is useful in pipelines like host read filtering, eliminating some of the common time consuming write-sort-read-filter steps. 
-
-```
-minimap2 -ax sr --eqx --secondary=no -t <threads> <input_mmi> <r1.fq.gz> <r2.fq.gz> | \
-peat filter -t <threads> --filter_mode lowpass --prefix <fq prefix> --report <json report> \
---AS <ALIGN_SCORE> --AL <ALIGN_LENGTH> --BS <BASE_SCORE> --AP <ALIGN_PROP> --AI <ALIGN_IDENT> --MQ <MAPQ>
-```
-
----
-## Roadmap - 
 ---

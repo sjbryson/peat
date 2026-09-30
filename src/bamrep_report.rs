@@ -151,7 +151,7 @@ pub fn generate_html_report(report_data: &ReportData, html_path: &PathBuf, repor
             {table_insert}
         </div>
 
-        <div class="divider">MAPQ Distribution</div>
+        <div class="divider">MAPQ Score</div>
         <p class="section-desc">
             Mapping quality (MAPQ) scores representing the aligner's confidence in the read's origin. 
             Higher scores indicate greater probability of correct placement. Alignments with MAPQ = 0 are not included.
@@ -164,7 +164,7 @@ pub fn generate_html_report(report_data: &ReportData, html_path: &PathBuf, repor
             <input type="range" id="mapq_slider">
         </div>
 
-        <div class="divider">Alignment Scores (AS)</div>
+        <div class="divider">Alignment Score (AS)</div>
         <p class="section-desc">
             Raw alignment scores indicating how well each read matches the reference genome, 
             accounting for matches, mismatches, and gaps. This is the value of the "AS" tag 
@@ -178,7 +178,7 @@ pub fn generate_html_report(report_data: &ReportData, html_path: &PathBuf, repor
             <input type="range" id="align_score_slider">
         </div>
 
-        <div class="divider">Alignment Lengths (AL)</div>
+        <div class="divider">Alignment Length (AL)</div>
         <p class="section-desc">
             Alignment lengths are calculated from the CIGAR string. 
             Matches, mismatches, and indels are counted; clipped regions are not. 
@@ -192,7 +192,7 @@ pub fn generate_html_report(report_data: &ReportData, html_path: &PathBuf, repor
             <input type="range" id="align_length_slider">
         </div>
 
-        <div class="divider">AS per Base</div>
+        <div class="divider">Per Base Alignment Score (BS)</div>
         <p class="section-desc">
             This is the record's Alignment Score divided by the Alignment Length (AS/AL).
             Only scores >= 0 are plotted. The maximum value is 2.
@@ -205,7 +205,7 @@ pub fn generate_html_report(report_data: &ReportData, html_path: &PathBuf, repor
             <input type="range" id="base_score_slider">
         </div>
 
-        <div class="divider">Alignment Proportions (AP)</div>
+        <div class="divider">Alignment Proportion (AP)</div>
         <p class="section-desc">
             This is the record's Alignment Length divided by the Read Length (AL/RL).
         </p>
