@@ -65,22 +65,22 @@ Another tool to parse SAM formatted stdout from aligners like minimap2, bowtie2,
 **Pipeline example:**
 
 ```
-minimap2 -ax sr --eqx {map_threads} {input_mmi} {r1} {r2} | \
-fastcov {cov_threads} -r {sample} {min_as} | \
-samtools sort {sort_threads} - -o {sample}.sorted.bam
+minimap2 -ax sr --eqx -t {threads} {input_mmi} {r1} {r2} | \
+peat coverage -t {threads} -r {sample} --AS {min_as} | \
+samtools sort -t {threads} - -o {sample}.sorted.bam
 ```
 
 Or if you don't want to save the sam/bam file - pipe to /dev/null:
 
 ```
-minimap2 -ax sr --eqx {map_threads} {input_mmi} {r1} {r2} | \
-fastcov {cov_threads} -r {sample} {min_as} > /dev/null
+minimap2 -ax sr --eqx -t {threads} {input_mmi} {r1} {r2} | \
+peat coverage -t {threads} -r {sample} --AS {min_as} > /dev/null
 ```
 
-And if you want to test filtering parameters from an existing sam/bam file:
+And if you want to work from an existing sam/bam file:
 
 ```
-samtools view -h file.bam | fastcov {cov_threads} -r {sample} {min_as} > /dev/null
+samtools view -h file.bam | peat coverage -t {threads} -r {sample} --AS {min_as} > /dev/null
 ```
 
 An optional metadata file (--metadata or -m) can be used to add additional information for each reference sequence in the coverage report. The --metadata_key or -k option tells fastcov which column or field in the metadata file corresponds to the reference sequence identifier - e.g. a column named "accession" could refer to the accessions in the reference database that was aligned to - these should match what you would see in a sam/bam header. All additional fields and values associated with each key will be included in the report.json file.
