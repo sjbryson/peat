@@ -3,6 +3,8 @@
 
 PEAT is a suite of tools for working with paired-end alignments and is under active development. It started as independent [tools](https://github.com/sjbryson/n2bio) developed in my viral metagenomics research. I wanted to simplify alignment based human read filtering and viral detection pipelines while enabling simple switching between different alignment tools and reference sequence libraries.
 
+PEAT is available on [github](https://github.com/sjbryson/peat) and on [crates.io](https://crates.io/crates/peat).
+
 #### There are several subcommands for peat:
 
 ```

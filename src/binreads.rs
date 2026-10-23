@@ -24,7 +24,7 @@ pub(crate) fn run(args: BinReadsArgs) -> io::Result<()> {
     let threshold_active: bool = threshold_args(&args.thresholds);
 
     // Setup Writer Pool
-    let max_open_bins: usize = 64;
+    let max_open_bins: usize = 256;
     let gz_threads: usize = if args.threads > 2 { 2 } else { 1 };
 
     let mut pool: BinnedFastqPool = BinnedFastqPool::new(

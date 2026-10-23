@@ -15,7 +15,7 @@ use n2bio::writers::WriterType;
 // BinnedFastqPool
 // ============================================================================
 
-pub struct BinnedFastqPool {
+pub(crate) struct BinnedFastqPool {
     /// LRU Cache holding open active PairedFastqWriters per bin.
     cache: LruCache<String, PairedFastqWriter<WriterType, WriterType>>,
     
@@ -36,7 +36,7 @@ pub struct BinnedFastqPool {
 }
 
 impl BinnedFastqPool {
-    pub fn new(
+    pub(crate) fn new(
         max_open_bins: usize,
         buffer_capacity: usize,
         out_dir: PathBuf,
@@ -55,7 +55,7 @@ impl BinnedFastqPool {
 
     /// Pushes a completed paired read record into the specified bin's buffer.
     /// Flushes to disk if the bin's buffer capacity threshold is reached.
-    pub fn push(&mut self, bin_id: &str, pair: PairedFastqRecord) -> io::Result<()> {
+    pub(crate) fn push(&mut self, bin_id: &str, pair: PairedFastqRecord) -> io::Result<()> {
         let buf: &mut Vec<PairedFastqRecord> = self.buffers.entry(bin_id.to_string()).or_insert_with(Vec::new);
         buf.push(pair);
 
@@ -99,7 +99,7 @@ impl BinnedFastqPool {
     }
 
     /// Finalize the pool: flush remaining memory buffers and all active stream writers in the LRU cache.
-    pub fn finish_all(&mut self) -> io::Result<()> {
+    pub(crate) fn finish_all(&mut self) -> io::Result<()> {
         // Flush buffered reads in memory
         let bin_ids: Vec<String> = self.buffers.keys().cloned().collect();
         for bin_id in bin_ids {

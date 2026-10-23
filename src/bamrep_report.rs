@@ -9,7 +9,7 @@ use crate::bamrep_stats::{ ReportData, StatSummary, ReadStats };
 // HTML output
 // ============================================================================
 
-pub fn generate_html_report(report_data: &ReportData, html_path: &PathBuf, report_name: &PathBuf) -> Result<(), Box<dyn std::error::Error>> {
+pub(crate) fn generate_html_report(report_data: &ReportData, html_path: &PathBuf, report_name: &PathBuf) -> Result<(), Box<dyn std::error::Error>> {
     
     let json_data: String = serde_json::to_string(report_data)?;
 

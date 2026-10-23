@@ -12,7 +12,7 @@ use n2bio::hist::Histogram;
 // ============================================================================
 
 #[derive(Serialize, Default, Clone, Debug)]
-pub struct ReadStats {
+pub(crate) struct ReadStats {
     pub total_reads: usize,
     pub total_unaligned: usize,
     pub total_alignments: usize,
@@ -26,13 +26,13 @@ pub struct ReadStats {
 }
 
 #[derive(Serialize, Default, Clone, Debug)]
-pub struct GlobalStats {
+pub(crate) struct GlobalStats {
     pub r1: ReadStats,
     pub r2: ReadStats,
 }
 
 impl GlobalStats {
-    pub fn update_counts(&mut self, r: &BamRecord) {
+    pub(crate) fn update_counts(&mut self, r: &BamRecord) {
         let mate: &mut ReadStats = if r.is_read1() {
             &mut self.r1
         } else if r.is_read2() {
@@ -62,7 +62,7 @@ impl GlobalStats {
         }
     }
 
-    pub fn set_total_reads(&mut self, n: usize) {
+    pub(crate) fn set_total_reads(&mut self, n: usize) {
         self.r1.total_reads = n;
         self.r2.total_reads = n;
     }
@@ -73,13 +73,13 @@ impl GlobalStats {
 // ============================================================================
 
 #[derive(Serialize)]
-pub struct ReportData {
+pub(crate) struct ReportData {
     pub global_stats: GlobalStats,
     pub alignment_stats: HashMap<String, StatSummary>,
 }
 
 #[derive(Serialize)]
-pub struct StatSummary {
+pub(crate) struct StatSummary {
     pub count: f64,
     pub mean: f64,
     pub median: f64,
@@ -105,7 +105,7 @@ impl Default for StatSummary {
 
 impl StatSummary {
     /// Extracts stat summaries from histogram.
-    pub fn from_histogram(mut hist: Histogram) -> Self {
+    pub(crate) fn from_histogram(mut hist: Histogram) -> Self {
         if hist.total_count() == 0 {
             return Self::default();
         }
@@ -132,7 +132,7 @@ impl StatSummary {
 // Stats Accumulator
 // ============================================================================
 
-pub struct StatsAccumulator {
+pub(crate) struct StatsAccumulator {
     pub pe_insert_size: Histogram,
 
     pub r1_mapq: Histogram,
@@ -152,7 +152,7 @@ pub struct StatsAccumulator {
 
 impl StatsAccumulator {
     /// Initialize all histograms
-    pub fn new(max_len: usize, max_ins: i32) -> Self {
+    pub(crate) fn new(max_len: usize, max_ins: i32) -> Self {
         let max_al: f64 = max_len as f64;
         let max_as: f64 = 2.0 * max_al;
         let max_ins_f: f64 = max_ins as f64;
@@ -176,7 +176,7 @@ impl StatsAccumulator {
         }
     }
 
-    pub fn update_read_stats(&mut self, r: &BamRecord) {
+    pub(crate) fn update_read_stats(&mut self, r: &BamRecord) {
         if r.mapq == 0 || !r.is_primary() || !r.is_mapped() {
             return;
         }
@@ -207,7 +207,7 @@ impl StatsAccumulator {
         }
     }
 
-    pub fn update_insert_size(&mut self, r1: &BamRecord, r2: &BamRecord, min_mapq: usize) {
+    pub(crate) fn update_insert_size(&mut self, r1: &BamRecord, r2: &BamRecord, min_mapq: usize) {
         if r1.mapq as usize >= min_mapq && r2.mapq as usize >= min_mapq {
             if r1.ref_id == r2.ref_id && r1.ref_id != -1 {
                 let (fwd, rev) = if r1.pos <= r2.pos { (r1, r2) } else { (r2, r1) };

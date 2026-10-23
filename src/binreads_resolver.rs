@@ -9,7 +9,7 @@ use std::path::Path;
 // ============================================================================
 // BinResolver
 // ============================================================================
-pub struct BinResolver {
+pub(crate) struct BinResolver {
     target_to_bin: Option<HashMap<String, String>>,
 }
 
@@ -18,7 +18,7 @@ impl BinResolver {
     /// 
     /// If `reference_map` is provided and non-empty, reads the TSV mapping file (target -> bin).
     /// If `reference_map` is empty or `None`, falls back to using reference names directly as bins.
-    pub fn new(reference_map: Option<&str>) -> io::Result<Self> {
+    pub(crate) fn new(reference_map: Option<&str>) -> io::Result<Self> {
         if let Some(map_path) = reference_map {
             if !map_path.trim().is_empty() {
                 let target_to_bin: HashMap<String, String> = Self::parse_tsv(map_path)?;
@@ -34,7 +34,7 @@ impl BinResolver {
     }
 
     /// Helper to parse TSV file: reference_id (col 0) -> bin_id (col 1)
-    fn parse_tsv(path_str: &str) -> io::Result<HashMap<String, String>> {
+    pub(crate) fn parse_tsv(path_str: &str) -> io::Result<HashMap<String, String>> {
         let path: &Path = Path::new(path_str);
         let file: File = File::open(path)?;
         let reader: BufReader<File> = BufReader::new(file);
@@ -79,7 +79,7 @@ impl BinResolver {
     /// 
     /// If a custom mapping was loaded, returns the mapped bin ID (or `None` if unmapped in TSV).
     /// If no mapping was provided, returns the `target_name` itself as the bin ID.
-    pub fn get_bin<'a>(&'a self, target_name: &'a str) -> Option<&'a str> {
+    pub(crate) fn get_bin<'a>(&'a self, target_name: &'a str) -> Option<&'a str> {
         match &self.target_to_bin {
             Some(map) => map.get(target_name).map(|s| s.as_str()),
             None => Some(target_name),
