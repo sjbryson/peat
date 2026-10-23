@@ -25,6 +25,8 @@ pub(crate) enum Commands {
     BamRep(BamRepArgs),
     /// Read a name sorted bam file and bin read pairs for each target.
     BinReads(BinReadsArgs),
+    /// Compare target alignments between two name sorted bam files.
+    BamCompare(BamCompareArgs),
 }
 
 // ============================================================================
@@ -195,3 +197,45 @@ pub(crate) struct BinReadsArgs {
     pub thresholds: ThresholdMetrics,
 }
 
+// ============================================================================
+// BamCompare Args
+// ============================================================================
+
+#[derive(Args)]
+pub struct BamCompareArgs {
+    /// Path to the first name-sorted BAM/SAM file
+    #[arg(long = "bam1", required = true)]
+    pub bam1: PathBuf,
+
+    /// Path to the second name-sorted BAM/SAM file
+    #[arg(long = "bam2", required = true)]
+    pub bam2: PathBuf,
+
+    /// Label or name for the first BAM source (e.g., "bwa", "db_v1")
+    #[arg(long = "label1", default_value = "bam1")]
+    pub label1: String,
+
+    /// Label or name for the second BAM source (e.g., "minimap2", "db_v2")
+    #[arg(long = "label2", default_value = "bam2")]
+    pub label2: String,
+
+    /// Output report prefix/path (base filename without extension)
+    #[arg(short = 'o', long = "output", default_value = "bam_compare_output")]
+    pub output: PathBuf,
+
+    /// Output Cytoscape-compatible GraphML file (.graphml)
+    #[arg(long = "graphml")]
+    pub graphml: bool,
+
+    /// Output TSV edge list table (.tsv)
+    #[arg(long = "tsv")]
+    pub tsv: bool,
+
+    /// Output Node-Link JSON representation (.json)
+    #[arg(long = "json")]
+    pub json: bool,
+
+    /// Flatten existing highpass alignment quality thresholds directly into CLI
+    #[command(flatten)]
+    pub thresholds: ThresholdMetrics,
+}

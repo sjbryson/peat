@@ -12,6 +12,10 @@ mod binreads;
 mod binreads_resolver;
 mod binreads_pooler;
 mod binreads_stats;
+mod bamcompare;
+mod bamcompare_tsv;
+mod bamcompare_json;
+mod bamcompare_graphml;
 
 use std::io;
 use clap::Parser;
@@ -29,6 +33,7 @@ fn main() -> io::Result<()> {
         Commands::Coverage(coverage_args) => coverage::run(coverage_args)?,
         Commands::BamRep(bamrep_args)       => bamrep::run(bamrep_args)?,
         Commands::BinReads(binreads_args) => binreads::run(binreads_args)?,
+        Commands::BamCompare(bamcompare_args)  => bamcompare::run(bamcompare_args)?,
     }
 
     Ok(())
