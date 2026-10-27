@@ -11,11 +11,12 @@ PEAT is available on [github](https://github.com/sjbryson/peat) and on [crates.i
 Usage: peat <COMMAND>
 
 Commands:
-  filter     Parse SAM records from stdin and filter to create a filtered paired-end fastq.gz library (r1.fq.gz & r2.fq.gz)
-  coverage   Parse SAM records from stdin and calculate coverage for each reference in the sam/bam header
-  bam-rep    Read a name sorted bam file and generate an interactive report
-  bin-reads  Read a name sorted bam file and bin read pairs for each target
-  help       Print this message or the help of the given subcommand(s)
+  filter       Parse SAM records from stdin and filter to create a filtered paired-end fastq.gz library (r1.fq.gz & r2.fq.gz)
+  coverage     Parse SAM records from stdin and calculate coverage for each reference in the sam/bam header
+  bam-rep      Read a name sorted bam file and generate an interactive report
+  bin-reads    Read a name sorted bam file and bin read pairs for each target
+  bam-compare  Compare target alignments between two name sorted bam files
+  help         Print this message or the help of the given subcommand(s)
 
 Options:
   -h, --help     Print help
@@ -152,3 +153,27 @@ Options:
   -h, --help                           Print help
 ```
 ---
+### peat bam-compare:
+Compare alignments in two different name sorted bam files. Generate a graph structure where edges represent shared alignments for different targets (or un-aligned) in deferent reference sets. *The input bam files must be **name sorted** - position or unsorted bam files will not work.*
+
+```
+Usage: peat bam-compare [OPTIONS] --bam1 <BAM1> --bam2 <BAM2>
+
+Options:
+      --bam1 <BAM1>                  Path to the first name-sorted BAM/SAM file
+      --bam2 <BAM2>                  Path to the second name-sorted BAM/SAM file
+      --label1 <LABEL1>              Label or name for the first BAM source (e.g., "bwa", "db_v1") [default: bam1]
+      --label2 <LABEL2>              Label or name for the second BAM source (e.g., "minimap2", "db_v2") [default: bam2]
+  -o, --output <OUTPUT>              Output report prefix/path (base filename without extension) [default: bam_compare_output]
+      --graphml                      Output Cytoscape-compatible GraphML file (.graphml)
+      --tsv                          Output TSV edge list table (.tsv)
+      --json                         Output Node-Link JSON representation (.json)
+      --align_score <ALIGN_SCORE>    Optional: Alignment Score - sam.get_int_tag("AS")
+      --align_length <ALIGN_LENGTH>  Optional: Alignment Lenth - sam.calculate_alignment_length()
+      --base_score <BASE_SCORE>      Optional: Per base alignment score (BS = AS/AL, avg. align_score per covered base)
+      --align_prop <ALIGN_PROP>      Optional: Alignment Proportion
+      --align_ident <ALIGN_IDENT>    Optional: Alignment Percent Identity
+      --mapq <MAPQ>                  Optional: MAPQ score
+  -h, --help                         Print help
+
+```

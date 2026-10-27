@@ -13,9 +13,7 @@ mod binreads_resolver;
 mod binreads_pooler;
 mod binreads_stats;
 mod bamcompare;
-mod bamcompare_tsv;
-mod bamcompare_json;
-mod bamcompare_graphml;
+mod bamcompare_report;
 
 use std::io;
 use clap::Parser;
@@ -29,10 +27,10 @@ fn main() -> io::Result<()> {
 
     // Match on the subcommand and route to the correct run function
     match args.command {
-        Commands::Filter(filter_args)       => filter::run(filter_args)?,
-        Commands::Coverage(coverage_args) => coverage::run(coverage_args)?,
-        Commands::BamRep(bamrep_args)       => bamrep::run(bamrep_args)?,
-        Commands::BinReads(binreads_args) => binreads::run(binreads_args)?,
+        Commands::Filter(filter_args)              => filter::run(filter_args)?,
+        Commands::Coverage(coverage_args)        => coverage::run(coverage_args)?,
+        Commands::BamRep(bamrep_args)              => bamrep::run(bamrep_args)?,
+        Commands::BinReads(binreads_args)        => binreads::run(binreads_args)?,
         Commands::BamCompare(bamcompare_args)  => bamcompare::run(bamcompare_args)?,
     }
 

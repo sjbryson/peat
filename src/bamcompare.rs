@@ -9,9 +9,8 @@ use n2bio::bam::{BamHeader, BamReader, BamRecord, BamFlags};
 
 use crate::cli::{BamCompareArgs, ThresholdMetrics};
 use crate::alignmentfilters::{highpass_bamfilter, threshold_args};
-use crate::bamcompare_tsv::write_tsv;
-use crate::bamcompare_json::write_json;
-use crate::bamcompare_graphml::write_gml;
+
+use crate::bamcompare_report::{ write_gml, write_json, write_tsv };
 
 #[derive(Hash, Eq, PartialEq, Clone, Debug)]
 pub struct EdgeKey {
