@@ -1,6 +1,6 @@
 //! bamcompare_graphml.rs
 
-use std::collections::HashSet;
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::{self, BufWriter, Write};
 use std::path::Path;
@@ -19,6 +19,13 @@ fn escape_xml(s: &str) -> String {
      .replace('>', "&gt;")
      .replace('"', "&quot;")
      .replace('\'', "&apos;")
+}
+
+// Struct to hold node attributes
+struct NodeInfo<'a> {
+    bam_label: &'a str,
+    target: &'a str,
+    total_alignments: usize,
 }
 
 pub(crate) fn write_gml(
@@ -47,21 +54,37 @@ pub(crate) fn write_gml(
     writeln!(writer, r#"  <graph id="G" edgedefault="undirected">"#)?;
 
     // Collect unique nodes
-    let mut unique_nodes: HashSet<(&str, &String)> = HashSet::new();
-    for edge in graph.keys() {
-        unique_nodes.insert((label1, &edge.target_bam1));
-        unique_nodes.insert((label2, &edge.target_bam2));
+    let mut unique_nodes: HashMap<String, NodeInfo> = HashMap::new();
+    
+    for (edge, &weight) in graph {
+        // BAM 1 Node Aggregation
+        let id1: String = format!("{}::{}", label1, edge.target_bam1);
+        let node1: &mut NodeInfo<'_> = unique_nodes.entry(id1).or_insert(NodeInfo {
+            bam_label: label1,
+            target: &edge.target_bam1,
+            total_alignments: 0,
+        });
+        node1.total_alignments += weight;
+
+        // BAM 2 Node Aggregation
+        let id2: String = format!("{}::{}", label2, edge.target_bam2);
+        let node2: &mut NodeInfo<'_> = unique_nodes.entry(id2).or_insert(NodeInfo {
+            bam_label: label2,
+            target: &edge.target_bam2,
+            total_alignments: 0,
+        });
+        node2.total_alignments += weight;
     }
 
     // Write nodes
-    for (bam_label, target) in unique_nodes {
-        let node_id: String = format!("{}::{}", bam_label, target);
+    for (node_id, info) in unique_nodes {
         let escaped_id: String = escape_xml(&node_id);
-        let escaped_target: String = escape_xml(target);
+        let escaped_target: String = escape_xml(info.target);
         
         writeln!(writer, r#"    <node id="{}">"#, escaped_id)?;
         writeln!(writer, r#"      <data key="v_name">{}</data>"#, escaped_target)?;
-        writeln!(writer, r#"      <data key="v_bam">{}</data>"#, escape_xml(bam_label))?;
+        writeln!(writer, r#"      <data key="v_bam">{}</data>"#, escape_xml(info.bam_label))?;
+        writeln!(writer, r#"      <data key="v_alignments">{}</data>"#, info.total_alignments)?;
         writeln!(writer, r#"    </node>"#)?;
     }
 
@@ -93,11 +116,12 @@ pub(crate) fn write_gml(
 // JSON Report 
 // ============================================================================
 
-#[derive(Serialize, Hash, Eq, PartialEq, Clone)]
-pub(crate) struct Node {
+#[derive(Serialize, Clone)]
+pub struct Node {
     pub id: String,
     pub bam: String,
     pub target: String,
+    pub total_alignments: usize,
 }
 
 #[derive(Serialize, Clone)]
@@ -119,26 +143,30 @@ pub(crate) fn write_json(
     label1: &str,
     label2: &str,
 ) -> io::Result<()> {
-    let mut unique_nodes: HashSet<Node> = HashSet::new();
+    let mut unique_nodes: HashMap<String, Node> = HashMap::new();
     let mut links: Vec<Link> = Vec::with_capacity(graph.len());
 
     for (edge, &weight) in graph {
         let id1: String = format!("{}::{}", label1, edge.target_bam1);
         let id2: String = format!("{}::{}", label2, edge.target_bam2);
 
-        // Track unique nodes for BAM 1
-        unique_nodes.insert(Node {
+        // Accumulate alignments for BAM 1 Node
+        let node1: &mut Node = unique_nodes.entry(id1.clone()).or_insert_with(|| Node {
             id: id1.clone(),
             bam: label1.to_string(),
             target: edge.target_bam1.clone(),
+            total_alignments: 0,
         });
+        node1.total_alignments += weight;
 
-        // Track unique nodes for BAM 2
-        unique_nodes.insert(Node {
+        // Accumulate alignments for BAM 2 Node
+        let node2: &mut Node = unique_nodes.entry(id2.clone()).or_insert_with(|| Node {
             id: id2.clone(),
             bam: label2.to_string(),
             target: edge.target_bam2.clone(),
+            total_alignments: 0,
         });
+        node2.total_alignments += weight;
 
         // Create link
         links.push(Link {
@@ -148,8 +176,7 @@ pub(crate) fn write_json(
         });
     }
 
-    // Convert HashSet to Vec
-    let nodes: Vec<Node> = unique_nodes.into_iter().collect();
+    let nodes: Vec<Node> = unique_nodes.into_values().collect();
     
     let graph_json: GraphJson = GraphJson { nodes, links };
 

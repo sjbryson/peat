@@ -154,7 +154,7 @@ Options:
 ```
 ---
 ### peat bam-compare:
-Compare alignments in two different name sorted bam files. Generate a graph structure where edges represent shared alignments for different targets (or un-aligned) in deferent reference sets. *The input bam files must be **name sorted** - position or unsorted bam files will not work.*
+Compare alignments in two different name sorted bam files. Generate a graph structure where edges represent shared alignments for different targets (or un-aligned) in different reference sets. Alignments can be filtered by different threshold metrics. *The input bam files must be **name sorted** - position or unsorted bam files will not work.*
 
 ```
 Usage: peat bam-compare [OPTIONS] --bam1 <BAM1> --bam2 <BAM2>

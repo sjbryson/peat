@@ -9,7 +9,6 @@ use n2bio::bam::{BamHeader, BamReader, BamRecord, BamFlags};
 
 use crate::cli::{BamCompareArgs, ThresholdMetrics};
 use crate::alignmentfilters::{highpass_bamfilter, threshold_args};
-
 use crate::bamcompare_report::{ write_gml, write_json, write_tsv };
 
 #[derive(Hash, Eq, PartialEq, Clone, Debug)]
@@ -39,7 +38,6 @@ pub(crate) fn run(args: BamCompareArgs) -> io::Result<()> {
     let threshold_active: bool = threshold_args(&args.thresholds);
     let mut graph: AlignmentGraph = HashMap::new();
 
-    
     let mut rec1: BamRecord = BamRecord::default();
     let mut rec2: BamRecord = BamRecord::default();
     let mut has_rec1: bool = bam1_reader.read_record(&mut rec1)?;
