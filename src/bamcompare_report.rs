@@ -48,6 +48,7 @@ pub(crate) fn write_gml(
     // Define attributes
     writeln!(writer, r#"  <key id="v_name" for="node" attr.name="name" attr.type="string"/>"#)?;
     writeln!(writer, r#"  <key id="v_bam" for="node" attr.name="bam_source" attr.type="string"/>"#)?;
+    writeln!(writer, r#"  <key id="v_alignments" for="node" attr.name="alignments" attr.type="long"/>"#)?;
     writeln!(writer, r#"  <key id="e_weight" for="edge" attr.name="weight" attr.type="long"/>"#)?;
 
     // Start graph
