@@ -57,6 +57,7 @@ pub(crate) fn write_gml(
     // Collect unique nodes
     let mut unique_nodes: HashMap<String, NodeInfo> = HashMap::new();
     
+    // Sum edge weights for each node to get total alignmets attribute
     for (edge, &weight) in graph {
         // BAM 1 Node Aggregation
         let id1: String = format!("{}::{}", label1, edge.target_bam1);
