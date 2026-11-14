@@ -180,7 +180,7 @@ Options:
 ```
 ---
 ### peat bam-clust:
-Experimental code -- Cluster targets based on primary discordant (i.e. R1 and R1 map to different targets) and secondary alignments. *The input bam files must be **name sorted** - position or unsorted bam files will not work.*
+Experimental code -- Cluster targets based on primary discordant (i.e. R1 and R1 map to different targets) and secondary alignments. *The input bam file must be **name sorted** - position or unsorted bam files will not work.*
 
 ```
 Usage: peat bam-clust [OPTIONS] --bam <BAM>
