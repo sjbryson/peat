@@ -16,6 +16,7 @@ Commands:
   bam-rep      Read a name sorted bam file and generate an interactive report
   bin-reads    Read a name sorted bam file and bin read pairs for each target
   bam-compare  Compare target alignments between two name sorted bam files
+  bam-clust    Cluster targets based on discordant and secondary alignments in a name sorted bam file
   help         Print this message or the help of the given subcommand(s)
 
 Options:
@@ -168,6 +169,30 @@ Options:
       --graphml                      Output Cytoscape-compatible GraphML file (.graphml)
       --tsv                          Output TSV edge list table (.tsv)
       --json                         Output Node-Link JSON representation (.json)
+      --align_score <ALIGN_SCORE>    Optional: Alignment Score - sam.get_int_tag("AS")
+      --align_length <ALIGN_LENGTH>  Optional: Alignment Lenth - sam.calculate_alignment_length()
+      --base_score <BASE_SCORE>      Optional: Per base alignment score (BS = AS/AL, avg. align_score per covered base)
+      --align_prop <ALIGN_PROP>      Optional: Alignment Proportion
+      --align_ident <ALIGN_IDENT>    Optional: Alignment Percent Identity
+      --mapq <MAPQ>                  Optional: MAPQ score
+  -h, --help                         Print help
+
+```
+---
+### peat bam-clust:
+Experimental code -- Cluster targets based on primary discordant (i.e. R1 and R1 map to different targets) and secondary alignments. *The input bam files must be **name sorted** - position or unsorted bam files will not work.*
+
+```
+Usage: peat bam-clust [OPTIONS] --bam <BAM>
+
+Options:
+      --bam <BAM>                    Path to the name-sorted BAM/SAM file
+  -o, --output <OUTPUT>              Output report prefix [default: bam_cluster_output]
+      --graphml                      Output GraphML file
+      --tsv                          Output Edge TSV file
+      --json                         Output Node-Link JSON file
+      --clusters                     Calculate connected components and output target-to-cluster TSV
+      --min_weight <MIN_WEIGHT>      Minimum shared reads (edge weight) to connect two targets [default: 1]
       --align_score <ALIGN_SCORE>    Optional: Alignment Score - sam.get_int_tag("AS")
       --align_length <ALIGN_LENGTH>  Optional: Alignment Lenth - sam.calculate_alignment_length()
       --base_score <BASE_SCORE>      Optional: Per base alignment score (BS = AS/AL, avg. align_score per covered base)
