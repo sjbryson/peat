@@ -14,6 +14,9 @@ mod binreads_pooler;
 mod binreads_stats;
 mod bamcompare;
 mod bamcompare_report;
+mod bamclust;
+mod bamclust_report;
+mod bamclust_clusters;
 
 use std::io;
 use clap::Parser;
@@ -32,6 +35,7 @@ fn main() -> io::Result<()> {
         Commands::BamRep(bamrep_args)              => bamrep::run(bamrep_args)?,
         Commands::BinReads(binreads_args)        => binreads::run(binreads_args)?,
         Commands::BamCompare(bamcompare_args)  => bamcompare::run(bamcompare_args)?,
+        Commands::BamClust(bamclust_args)        => bamclust::run(bamclust_args)?,
     }
 
     Ok(())

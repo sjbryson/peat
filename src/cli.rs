@@ -9,7 +9,7 @@ use std::path::PathBuf;
 // ============================================================================
 
 #[derive(Parser)]
-#[command(name = "peat", version = "1.0", about = "Paired-End Alignment Tools")]
+#[command(name = "peat", version = "0.1.2", about = "Paired-End Alignment Tools")]
 pub(crate) struct Cli {
     #[command(subcommand)]
     pub command: Commands,
@@ -27,6 +27,8 @@ pub(crate) enum Commands {
     BinReads(BinReadsArgs),
     /// Compare target alignments between two name sorted bam files.
     BamCompare(BamCompareArgs),
+    /// Cluster targets based on discordant and secondary alignments in a name sorted bam file.
+    BamClust(BamClustArgs),
 }
 
 // ============================================================================
@@ -135,7 +137,7 @@ pub(crate) struct CoverageArgs {
 }
 
 // ============================================================================
-// Compose Args
+// BamRep Args
 // ============================================================================
 
 #[derive(Args)]
@@ -236,6 +238,44 @@ pub struct BamCompareArgs {
     pub json: bool,
 
     /// Flatten existing highpass alignment quality thresholds directly into CLI
+    #[command(flatten)]
+    pub thresholds: ThresholdMetrics,
+}
+
+// ============================================================================
+// BamClust Args
+// ============================================================================
+
+#[derive(Args)]
+pub struct BamClustArgs {
+    /// Path to the name-sorted BAM/SAM file
+    #[arg(long = "bam", required = true)]
+    pub bam: PathBuf,
+
+    /// Output report prefix
+    #[arg(short = 'o', long = "output", default_value = "bam_cluster_output")]
+    pub output: PathBuf,
+
+    /// Output GraphML file
+    #[arg(long = "graphml")]
+    pub graphml: bool,
+
+    /// Output Edge TSV file
+    #[arg(long = "tsv")]
+    pub tsv: bool,
+
+    /// Output Node-Link JSON file
+    #[arg(long = "json")]
+    pub json: bool,
+
+    /// Calculate connected components and output target-to-cluster TSV
+    #[arg(long = "clusters")]
+    pub clusters: bool,
+
+    /// Minimum shared reads (edge weight) to connect two targets
+    #[arg(long = "min_weight", default_value = "1")]
+    pub min_weight: usize,
+
     #[command(flatten)]
     pub thresholds: ThresholdMetrics,
 }

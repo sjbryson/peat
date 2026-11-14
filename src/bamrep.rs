@@ -12,6 +12,9 @@ use n2bio::bam::{ BamReader, BamHeader, BamRecord, BamFlags };
 use crate::bamrep_stats::{ GlobalStats, StatSummary, StatsAccumulator, ReportData };
 use crate::cli::BamRepArgs;
 
+// ============================================================================
+// BamRep run() 
+// ============================================================================
 
 pub(crate) fn run(args: BamRepArgs) -> io::Result<()> {
     

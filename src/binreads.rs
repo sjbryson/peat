@@ -11,6 +11,9 @@ use crate::binreads_pooler::BinnedFastqPool;
 use crate::binreads_resolver::BinResolver;
 use crate::binreads_stats::BinReadReport;
 
+// ============================================================================
+// BinReads run() 
+// ============================================================================
 
 pub(crate) fn run(args: BinReadsArgs) -> io::Result<()> {
     // Initialize BamReader and BamHeader

@@ -2,17 +2,17 @@
 //! Main run function called by the coverage subcommand. 
 
 use crossbeam::channel::bounded;
-use std::io::{self, BufRead};
+use std::io::{ self, BufRead };
 use std::thread;
 use std::sync::Arc;
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::{ AtomicU64, Ordering };
 use std::time::Instant;
 use std::io::Write;
 use std::collections::HashMap;
 use std::path::Path;
 
 use n2bio::metadata::Metadata;
-use n2bio::sam::{SamReader, SamStr, SamFields, SamFlags };
+use n2bio::sam::{ SamReader, SamStr, SamFields, SamFlags };
 
 use crate::cli::CoverageArgs;
 use crate::alignmentfilters::{ highpass_samfilter, threshold_args };
@@ -62,7 +62,7 @@ enum PipelineMsg {
 }
 
 // ============================================================================
-// Run Coverage
+// Coverage run()
 // ============================================================================
 
 pub(crate) fn run(args: CoverageArgs) -> io::Result<()> {

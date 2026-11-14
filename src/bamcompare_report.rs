@@ -1,8 +1,8 @@
-//! bamcompare_graphml.rs
+//! bamcompare_report.rs
 
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::{self, BufWriter, Write};
+use std::io::{ self, BufWriter, Write };
 use std::path::Path;
 use serde::Serialize;
 

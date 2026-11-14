@@ -2,18 +2,22 @@
 //! Main run function called by the filter subcommand.
 
 use crossbeam::channel::bounded;
-use std::io::{self, BufRead, Write};
+use std::io::{ self, BufRead, Write };
 use std::thread;
 use std::sync::Arc;
-use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::atomic::{ AtomicU64, Ordering };
 use std::time::Instant;
 
-use n2bio::sam::{SamReader, SamStr, SamFlags };
-use n2bio::fastq::{ShardedMateMap, PairedRead, PairedFastqWriter};
+use n2bio::sam::{ SamReader, SamStr, SamFlags };
+use n2bio::fastq::{ ShardedMateMap, PairedRead, PairedFastqWriter };
 use n2bio::writers::WriterType;
 
 use crate::cli::{ FilterArgs, ThresholdMode, ThresholdMetrics };
 use crate::alignmentfilters::{ lowpass_samfilter, highpass_samfilter, threshold_args };
+
+// ============================================================================
+// Filter run() 
+// ============================================================================
 
 pub(crate) fn run(args: FilterArgs) -> io::Result<()> {
 
