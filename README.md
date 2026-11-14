@@ -71,7 +71,7 @@ Another tool to parse SAM formatted stdout from aligners like minimap2, bowtie2,
 ```
 minimap2 -ax sr --eqx -t <THREADS> <MMI> <R1> <R2> | \
 peat coverage -t <THREADS> -r <REPORT> --AS <ALIGN_SCORE> | \
-samtools sort -t <THREADS> - -o <REPORT>.sorted.bam
+samtools sort -n -t <THREADS> - -o <REPORT>.sorted.bam
 ```
 
 Or if you don't want to save the sam/bam file - pipe to /dev/null:
