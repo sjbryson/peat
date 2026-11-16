@@ -76,3 +76,4 @@ pub(crate) fn write_clusters(graph: &ClusterGraph, output_prefix: &Path) -> io::
 
     Ok(())
 }
+

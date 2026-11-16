@@ -6,8 +6,6 @@ use std::io;
 use std::num::NonZeroUsize;
 use std::path::PathBuf;
 use lru::LruCache;
-
-// Importing your structs
 use n2bio::fastq::{ PairedFastqRecord, PairedFastqWriter };
 use n2bio::writers::WriterType;
 

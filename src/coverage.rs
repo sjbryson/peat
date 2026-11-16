@@ -10,7 +10,6 @@ use std::time::Instant;
 use std::io::Write;
 use std::collections::HashMap;
 use std::path::Path;
-
 use n2bio::metadata::Metadata;
 use n2bio::sam::{ SamReader, SamStr, SamFields, SamFlags };
 

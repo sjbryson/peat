@@ -7,7 +7,6 @@ use std::thread;
 use std::sync::Arc;
 use std::sync::atomic::{ AtomicU64, Ordering };
 use std::time::Instant;
-
 use n2bio::sam::{ SamReader, SamStr, SamFlags };
 use n2bio::fastq::{ ShardedMateMap, PairedRead, PairedFastqWriter };
 use n2bio::writers::WriterType;
