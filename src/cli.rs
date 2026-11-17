@@ -276,6 +276,10 @@ pub struct BamClustArgs {
     #[arg(long = "min_weight", default_value = "1")]
     pub min_weight: usize,
 
+    /// Minimum number of primary alignments required to keep a target node
+    #[arg(long, default_value_t = 1)]
+    pub min_primary: usize,
+
     #[command(flatten)]
     pub thresholds: ThresholdMetrics,
 }

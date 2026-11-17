@@ -114,9 +114,24 @@ pub(crate) fn run(args: BamClustArgs) -> io::Result<()> {
         }
     }
 
-    // Filter edges by min_weight: default = 1
-    graph.retain(|_, &mut weight| weight >= args.min_weight);
+    //Filter Nodes: Keep nodes with ≥ `min_primary` alignments
+    nodes.retain(|_target, stats| stats.primary_count >= args.min_primary);
 
+    //Filter Edges: Keep edges if have ≥ `min_weight` AND both targets pass node `min_primary` alignments
+    graph.retain(|edge, &mut weight| {
+        let passes_weight: bool = weight >= args.min_weight;
+        
+        let nodes_exist: bool = match edge {
+            EdgeKey::Secondary { from, to } => {
+                nodes.contains_key(from) && nodes.contains_key(to)
+            }
+            EdgeKey::PrimaryDiscordant { t1, t2 } => {
+                nodes.contains_key(t1) && nodes.contains_key(t2)
+            }
+        };
+
+        passes_weight && nodes_exist
+    });
     // Run optional output exporters
     if args.graphml { bamclust_report::write_gml(&graph, &nodes, &args.output)?; }
     if args.tsv { bamclust_report::write_tsv(&graph, &nodes, &args.output)?; }

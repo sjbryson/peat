@@ -6,7 +6,6 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::path::PathBuf;
 use rayon::prelude::*;
-
 use n2bio::bam::{ BamReader, BamHeader, BamRecord, BamFlags };
 
 use crate::bamrep_stats::{ GlobalStats, StatSummary, StatsAccumulator, ReportData };
