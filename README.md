@@ -193,6 +193,7 @@ Options:
       --json                         Output Node-Link JSON file
       --clusters                     Calculate connected components and output target-to-cluster TSV
       --min_weight <MIN_WEIGHT>      Minimum shared reads (edge weight) to connect two targets [default: 1]
+      --min-primary <MIN_PRIMARY>    Minimum number of primary alignments required to keep a target node [default: 1]
       --align_score <ALIGN_SCORE>    Optional: Alignment Score - sam.get_int_tag("AS")
       --align_length <ALIGN_LENGTH>  Optional: Alignment Lenth - sam.calculate_alignment_length()
       --base_score <BASE_SCORE>      Optional: Per base alignment score (BS = AS/AL, avg. align_score per covered base)
